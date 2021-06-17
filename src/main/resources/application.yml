@@ -2,5 +2,12 @@ spring:
   devtools:
     livereload:
       enabled: true
-  freemarker:
+    restart:
+      enabled: false
+  thymlefleaf:
     cache: false
+  security:
+    user:
+      name: admin
+      password: 123
+      roles: ADMIN
