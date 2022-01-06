@@ -45,13 +45,13 @@ public class AccountControllerTest {
 
     @Test
     public void index_user() throws Exception{
-        mockMvc.perform(get("/").with(user("ktnet").roles("USER")))
+        mockMvc.perform(get("/").with(user("mans").roles("USER")))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(username = "ktnet", roles = "USER")
+    @WithMockUser(username = "mans", roles = "USER")
     public void index_user_annotation() throws Exception{
         mockMvc.perform(get("/"))
                 .andDo(print())
@@ -68,13 +68,13 @@ public class AccountControllerTest {
 
     @Test
     public void admin_user() throws Exception{
-        mockMvc.perform(get("/admin").with(user("ktnet").roles("USER")))
+        mockMvc.perform(get("/admin").with(user("mans").roles("USER")))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(username = "ktnet", roles = "USER")
+    @WithMockUser(username = "mans", roles = "USER")
     public void admin_user_annotation() throws Exception{
         mockMvc.perform(get("/admin"))
                 .andDo(print())
@@ -83,13 +83,13 @@ public class AccountControllerTest {
 
     @Test
     public void admin_admin() throws Exception{
-        mockMvc.perform(get("/admin").with(user("ktnet").roles("ADMIN")))
+        mockMvc.perform(get("/admin").with(user("mans").roles("ADMIN")))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(username = "ktnet", roles = "ADMIN")
+    @WithMockUser(username = "mans", roles = "ADMIN")
     public void admin_admin_annotation() throws Exception{
         mockMvc.perform(get("/admin"))
                 .andDo(print())
@@ -99,7 +99,7 @@ public class AccountControllerTest {
     @Test
     @Transactional
     public void login_success() throws Exception{
-        String username = "ktnet";
+        String username = "mans";
         String password = "123";
         Account user = createUser(username, password);
 
@@ -111,7 +111,7 @@ public class AccountControllerTest {
     @Test
     @Transactional
     public void login_success2() throws Exception{
-        String username = "ktnet";
+        String username = "mans";
         String password = "123";
         Account user = createUser(username, password);
 
@@ -123,7 +123,7 @@ public class AccountControllerTest {
     @Test
     @Transactional
     public void login_fail() throws Exception{
-        String username = "ktnet";
+        String username = "mans";
         String password = "123";
         Account user = createUser(username, password);
 
@@ -132,9 +132,9 @@ public class AccountControllerTest {
                 .andExpect(unauthenticated());
     }
 
-    private Account createUser(String ktnet, String password) {
+    private Account createUser(String username, String password) {
         Account account = new Account();
-        account.setUsername(ktnet);
+        account.setUsername(username);
         account.setPassword(password);
         account.setRole("USER");
         accountService.signUp(account);

@@ -29,10 +29,10 @@ public class AccountService implements UserDetailsService {
 
     }
 
-    public Long signUp(Account account){
+    public Account signUp(Account account){
         account.encodePassword(passwordEncoder);
         accountRepository.save(account);
-        return account.getId();
+        return account;
     }
 
 }

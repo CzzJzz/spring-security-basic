@@ -1,13 +1,23 @@
 package me.whiteship.demospringsecurityform.form;
 
+import me.whiteship.demospringsecurityform.Account.AccountContext;
+import me.whiteship.demospringsecurityform.Account.AccountRepository;
+import me.whiteship.demospringsecurityform.Account.AccountService;
+import me.whiteship.demospringsecurityform.common.SecurityLogger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
+import java.util.concurrent.Callable;
 
 @Controller
 public class SampleController {
+
+    @Autowired SampleService sampleService;
+    @Autowired AccountRepository accountRepository;
 
     @GetMapping("/")
     public String index(Model model, Principal principal){
@@ -30,6 +40,8 @@ public class SampleController {
     @GetMapping("/dashboard")
     public String dashboard(Model model, Principal principal){
         model.addAttribute("message", "Hello " + principal.getName());
+        AccountContext.setAccount(accountRepository.findByUsername(principal.getName()));
+        sampleService.dashboard();
         return "dashboard";
     }
 
@@ -38,4 +50,31 @@ public class SampleController {
         model.addAttribute("message", "Hello Admin, " + principal.getName());
         return "admin";
     }
+
+    @GetMapping("/user")
+    public String user(Model model, Principal principal){
+        model.addAttribute("message", "Hello User, " + principal.getName());
+        return "user";
+    }
+
+    @GetMapping("/async-handler")
+    @ResponseBody
+    public Callable<String> asyncHandler(){
+        SecurityLogger.log("MVC");
+
+        return () -> {
+            SecurityLogger.log("Callable");
+            return "Async Handler";
+        };
+    }
+
+    @GetMapping("/async-service")
+    @ResponseBody
+    public String asyncService(){
+        SecurityLogger.log("MVC, before async service");
+        sampleService.asyncService();
+        SecurityLogger.log("MVC, after async service");
+        return "Async Service";
+    }
+
 }
